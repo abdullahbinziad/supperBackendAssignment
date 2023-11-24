@@ -3,7 +3,7 @@ import * as UserController from "./user.controller";
 
 const router = express.Router();
 
-router.post("/create-user", UserController.createUser); // Route for creating a users
+router.post("/", UserController.createUser); // Route for creating a users
 router.get("/", UserController.getAllUsers); // Route for getting all users
 router.get("/:userId", UserController.getSingleUser); // Route for getting a single user by userId
 router.put("/:userId", UserController.updateUser); // Route for updating a user
