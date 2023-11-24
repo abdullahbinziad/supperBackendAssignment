@@ -14,7 +14,7 @@ app.use("/api/users", UserRoutes);
 app.use("/api/orders", OrderRoute);
 
 const getAController = (req: Request, res: Response) => {
-  res.json("Hello Backend");
+  res.send("Hello Backend");
 };
 
 app.get("/", getAController);
