@@ -69,3 +69,17 @@ export const deleteUserFromDB = async (id: any) => {
   const deletedUser = await UserModel.findOneAndDelete({ userId: id });
   return deletedUser;
 };
+
+//get all order from a specific users
+export const getAllOrdersFromUser = async (userId: number) => {
+  try {
+    const userWithOrders = await UserModel.findOne({ userId }).populate(
+      "orders"
+    );
+
+    return userWithOrders?.orders || null;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to retrieve user orders");
+  }
+};

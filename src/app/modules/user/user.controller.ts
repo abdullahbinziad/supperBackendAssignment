@@ -176,7 +176,7 @@ export const addOrderinUser = async (req: Request, res: Response) => {
     if (result) {
       res.status(200).json({
         success: true,
-        message: "Products Added successfully",
+        message: "Order created successfully!",
         data: null,
       });
     } else {
@@ -191,6 +191,27 @@ export const addOrderinUser = async (req: Request, res: Response) => {
       success: false,
       message: "Failed to update user",
       error: error.message,
+    });
+  }
+};
+
+//get all order from a specific users
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const userId: any = req.params.userId; // Extracting user ID from URL params
+    const users = await UserService.getAllOrdersFromUser(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Users retrieved successfully",
+      data: users,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve users",
+      error: error,
     });
   }
 };
