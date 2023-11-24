@@ -18,6 +18,13 @@ const userSchema: Schema = new Schema({
     city: { type: String, required: true },
     country: { type: String, required: true },
   },
+  orders: [
+    {
+      productName: { type: String, required: true },
+      price: { type: Number, required: true },
+      quantity: { type: Number, required: true },
+    },
+  ], // Include the orders field using the orderSchema
 });
 
-export default mongoose.model<User>("User", userSchema);
+export default mongoose.model<User & Document>("User", userSchema);

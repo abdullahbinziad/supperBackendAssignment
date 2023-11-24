@@ -10,15 +10,7 @@ export const createUser = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     userData.password = hashedPassword;
 
-    // if (error) {
-    //   res.status(500).json({
-    //     success: false,
-    //     message: "Failed to create user",
-    //     error: error.details,
-    //   });
-    // }
-
-    const validateData = userValidationSchema.parse(userData);
+    const validateData = await userValidationSchema.parse(userData);
 
     const user = await UserService.createUserInDB(validateData);
 
@@ -107,11 +99,85 @@ export const updateUser = async (req: Request, res: Response) => {
 
     const result = await UserService.updateUserInDB(userId, userDataToUpdate);
 
+    const formattedUser = {
+      userId: result?.userId,
+      username: result?.username,
+      fullName: result?.fullName,
+      age: result?.age,
+      email: result?.email,
+      isActive: result?.isActive,
+      hobbies: result?.hobbies,
+      address: result?.address,
+    };
+
     if (result) {
       res.status(200).json({
         success: true,
         message: "User updated successfully",
-        data: result,
+        data: formattedUser,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "User not found or update failed",
+      });
+    }
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update user",
+      error: error.message,
+    });
+  }
+};
+
+//delete
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const deletionResult = await UserService.deleteUserFromDB(userId);
+
+    if (deletionResult) {
+      res.status(200).json({
+        success: true,
+        message: "User deleted successfully",
+        data: null,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "User not found or could not be deleted",
+      });
+    }
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete user",
+      error: error.message,
+    });
+  }
+};
+
+//put orders in specific user
+
+export const addOrderinUser = async (req: Request, res: Response) => {
+  try {
+    const userId: any = req.params.userId; // Extracting user ID from URL params
+    const userDataToUpdate = req.body; // New user data to update
+
+    const result = await UserService.addProductsInUserDB(
+      userId,
+      userDataToUpdate
+    );
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        message: "Products Added successfully",
+        data: null,
       });
     } else {
       res.status(404).json({

@@ -15,4 +15,11 @@ export interface User {
     city: string;
     country: string;
   };
+  orders?:
+    | Array<{
+        productName: string;
+        price: number;
+        quantity: number;
+      }>
+    | undefined;
 }
