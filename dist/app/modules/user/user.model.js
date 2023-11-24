@@ -41,5 +41,12 @@ const userSchema = new mongoose_1.Schema({
         city: { type: String, required: true },
         country: { type: String, required: true },
     },
+    orders: [
+        {
+            productName: { type: String, required: true },
+            price: { type: Number, required: true },
+            quantity: { type: Number, required: true },
+        },
+    ],
 });
 exports.default = mongoose_1.default.model("User", userSchema);

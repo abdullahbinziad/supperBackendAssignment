@@ -230,13 +230,13 @@ export const getAllOrders = async (req: Request, res: Response) => {
 export const getAllOrdersPrice = async (req: Request, res: Response) => {
   try {
     const userId: any = req.params.userId;
-    const orders = await UserService.getAllOrdersTotalPrice(userId);
+    const totalPrice = await UserService.getAllOrdersTotalPrice(userId);
 
     res.status(200).json({
       success: true,
-      message: "Order fetched successfully!",
+      message: "Total Price fetching Sucessfully",
       data: {
-        orders: orders,
+        totalPrice: totalPrice,
       },
     });
   } catch (error: any) {
