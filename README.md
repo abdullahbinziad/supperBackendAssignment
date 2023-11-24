@@ -21,12 +21,11 @@ Ensure you have the following installed on your system:
 ## Environment Configuration
 1. Create a `.env` file in the root directory based on the provided `.env.example`.
 2. Configure the environment variables as needed for your local setup.
-NODE_ENV = 
-PORT = 
-DB_USER= 
-DB_PASS= 
-
-DATABASE_URL =
+NODE_ENV = *******
+PORT = ******
+DB_USER= ******
+DB_PASS= *******
+DATABASE_URL =******
 
 
 
