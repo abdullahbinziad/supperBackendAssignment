@@ -6,7 +6,7 @@ import userValidationSchema from "./user.validation";
 export const createUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
-    // Hash the password securely before storing it in the database
+    // Hash the password secure
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     userData.password = hashedPassword;
 
@@ -30,6 +30,8 @@ export const createUser = async (req: Request, res: Response) => {
     });
   }
 };
+
+//get all users from Database
 
 export const getAllUsers = async (_req: Request, res: Response) => {
   try {
@@ -58,14 +60,13 @@ export const getAllUsers = async (_req: Request, res: Response) => {
   }
 };
 
-//interface for the single user data
+//get a single user from Database
 
 export const getSingleUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
     const result = await UserService.getSingleUserFromDB(userId);
 
-    // Transform the result into the desired format
     const formattedUser = {
       userId: result?.userId,
       username: result?.username,
@@ -92,12 +93,16 @@ export const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// update a single user
+
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const userId: any = req.params.userId; // Extracting user ID from URL params
-    const userDataToUpdate = req.body; // New user data to update
+    const userId: any = req.params.userId;
+    const userDataToUpdate = req.body;
 
-    const result = await UserService.updateUserInDB(userId, userDataToUpdate);
+    const validateData = await userValidationSchema.parse(userDataToUpdate);
+
+    const result = await UserService.updateUserInDB(userId, validateData);
 
     const formattedUser = {
       userId: result?.userId,
@@ -132,7 +137,7 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-//delete
+//delete a specific user from DB
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
@@ -161,12 +166,12 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-//put orders in specific user
+//insert orders in specific user
 
 export const addOrderinUser = async (req: Request, res: Response) => {
   try {
-    const userId: any = req.params.userId; // Extracting user ID from URL params
-    const userDataToUpdate = req.body; // New user data to update
+    const userId: any = req.params.userId;
+    const userDataToUpdate = req.body;
 
     const result = await UserService.addProductsInUserDB(
       userId,
@@ -198,7 +203,7 @@ export const addOrderinUser = async (req: Request, res: Response) => {
 //get all order from a specific users
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const userId: any = req.params.userId; // Extracting user ID from URL params
+    const userId: any = req.params.userId;
     const orders = await UserService.getAllOrdersFromUser(userId);
 
     res.status(200).json({
@@ -224,7 +229,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
 //get all price of all orders from a spcefic order
 export const getAllOrdersPrice = async (req: Request, res: Response) => {
   try {
-    const userId: any = req.params.userId; // Extracting user ID from URL params
+    const userId: any = req.params.userId;
     const orders = await UserService.getAllOrdersTotalPrice(userId);
 
     res.status(200).json({

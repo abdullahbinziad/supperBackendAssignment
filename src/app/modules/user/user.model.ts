@@ -24,7 +24,7 @@ const userSchema: Schema = new Schema({
       price: { type: Number, required: true },
       quantity: { type: Number, required: true },
     },
-  ], // Include the orders field using the orderSchema
+  ],
 });
 
 export default mongoose.model<User & Document>("User", userSchema);
