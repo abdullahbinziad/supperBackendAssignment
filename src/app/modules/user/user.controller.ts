@@ -199,19 +199,50 @@ export const addOrderinUser = async (req: Request, res: Response) => {
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const userId: any = req.params.userId; // Extracting user ID from URL params
-    const users = await UserService.getAllOrdersFromUser(userId);
+    const orders = await UserService.getAllOrdersFromUser(userId);
 
     res.status(200).json({
       success: true,
-      message: "Users retrieved successfully",
-      data: users,
+      message: "Order fetched successfully!",
+      data: {
+        orders: orders,
+      },
     });
   } catch (error: any) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: "Failed to retrieve users",
-      error: error,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+  }
+};
+
+//get all price of all orders from a spcefic order
+export const getAllOrdersPrice = async (req: Request, res: Response) => {
+  try {
+    const userId: any = req.params.userId; // Extracting user ID from URL params
+    const orders = await UserService.getAllOrdersTotalPrice(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Order fetched successfully!",
+      data: {
+        orders: orders,
+      },
+    });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
     });
   }
 };

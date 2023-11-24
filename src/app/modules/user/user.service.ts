@@ -1,85 +1,59 @@
 import UserModel from "./user.model";
 import { User } from "./user.interface";
 
-export const createUserInDB = async (user: User) => {
-  const result = await UserModel.create(user);
-  return result;
-};
+export const createUserInDB = async (user: User) => UserModel.create(user);
 
-export const getAllUsersFromDB = async () => {
-  const result = await UserModel.find();
-  return result;
-};
+export const getAllUsersFromDB = async () => UserModel.find();
 
-export const getSingleUserFromDB = async (id: any) => {
-  const result = await UserModel.findOne({ userId: id });
-  return result;
-};
+export const getSingleUserFromDB = async (id: any) =>
+  UserModel.findOne({ userId: id });
 
 export const updateUserInDB = async (
   userId: number,
   updatedUserData: Partial<User>
-) => {
-  const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
-    new: true,
-  });
-  return result;
-};
+) => UserModel.findOneAndUpdate({ userId }, updatedUserData, { new: true });
 
 export const addProductsInUserDB = async (
   userId: number,
   updatedUserData: Partial<User>
 ) => {
-  try {
-    // Find the user by userId
-    const user = await UserModel.findOne({ userId });
+  const user = await UserModel.findOne({ userId });
 
-    if (!user) {
-      // Handle case where user is not found
-      return null;
-    }
-
-    const { productName, price, quantity }: any = updatedUserData;
-
-    const newOrder = {
-      productName,
-      price,
-      quantity,
-    };
-    // Check if user has orders array, if not create it
-    if (!user.orders) {
-      user.orders = [];
-    }
-
-    // Add the new product to the orders array
-    user.orders.push(newOrder);
-
-    // Save the updated user document
-    const updatedUser = await user.save();
-
-    return updatedUser;
-  } catch (error) {
-    // Handle any errors that occur during the update process
-    console.error(error);
-    throw new Error("Failed to add product to user orders");
+  if (!user) {
+    return null;
   }
+
+  const { productName, price, quantity }: any = updatedUserData;
+  const newOrder = { productName, price, quantity };
+
+  if (!user.orders) {
+    user.orders = [];
+  }
+
+  user.orders.push(newOrder);
+  const updatedUser = await user.save();
+
+  return updatedUser;
 };
 
-export const deleteUserFromDB = async (id: any) => {
-  const deletedUser = await UserModel.findOneAndDelete({ userId: id });
-  return deletedUser;
-};
+export const deleteUserFromDB = async (id: any) =>
+  UserModel.findOneAndDelete({ userId: id });
 
-//get all order from a specific users
 export const getAllOrdersFromUser = async (userId: number) => {
-  try {
-    const userWithOrders = await UserModel.findOne({ userId }).populate(
-      "orders"
-    );
+  const userWithOrders = await UserModel.findOne({ userId }).populate("orders");
+  return userWithOrders?.orders || null;
+};
 
-    return userWithOrders?.orders || null;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Failed to retrieve user orders");
-  }
+export const getAllOrdersTotalPrice = async (userId: number) => {
+  const userWithOrders = await UserModel.findOne({ userId }).populate("orders");
+  const orders = userWithOrders?.orders || [];
+
+  let totalPrice = 0;
+
+  orders.forEach((order) => {
+    const subtotal = order.price * order.quantity;
+    totalPrice += subtotal;
+  });
+
+  return totalPrice;
 };
