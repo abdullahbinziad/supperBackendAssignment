@@ -15,8 +15,7 @@ app.use((0, cors_1.default)());
 app.use("/api/users", user_route_1.UserRoutes);
 app.use("/api/orders", order_route_1.OrderRoute);
 const getAController = (req, res) => {
-    const a = 10;
-    res.send(a);
+    res.send("Hello Backend");
 };
 app.get("/", getAController);
 exports.default = app;
